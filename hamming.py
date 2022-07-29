@@ -1,8 +1,5 @@
 #Class for hamming correction
 #Extraido de: https://www.geeksforgeeks.org/hamming-code-implementation-in-python/
-from unittest import result
-from numpy import array
-
 
 class Hamming(object):
     def __init__(self, bitarray):
