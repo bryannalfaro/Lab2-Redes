@@ -1,21 +1,40 @@
-import pickle
+from copyreg import pickle
 import socket
+import pickle
+import random
+from bitarray import bitarray
 
-class Emisor:
-    def __init__(self, host, port):
-        self.host = host
-        self.port = port
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as self.socket:
-            self.socket.connect((host, port))
+HOST = "127.0.0.1"  # The server's hostname or IP address
+PORT = 65432  # The port used by the server
 
-    def enviar_cadena(self, mensaje):
-        self.socket.send(pickle.dumps(mensaje))
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.connect((HOST, PORT))
 
-    def enviar_cadena_segura(self, mensaje):
-        pass
+    # Enviar cadena
+    message = input('Escribe el mensaje:\n')
 
-    def agregar_ruido(self, mensaje):
-        pass
+    # Enviar cadena segura
+    bits = bitarray()
+    bits.frombytes(bytes(message, 'ascii'))
+    print(bits)
 
-    def cerrar(self):
-        self.socket.close()
+    # RUIDOOOOOOOOO
+    for index, bit in enumerate(bits):
+        P = 0.01
+        error = random.random() < P # P en el rango [0, 1)
+        if error:
+            print(f'da error en pos {index}')
+            bits[index] = 1 if bits[index] == 0 else 0
+
+    print(bits)
+
+    # Empaquetando bits
+    bits_pack = pickle.dumps(bits)
+
+    # Envia al receptor
+    s.sendall(bits_pack)
+
+    # Recibe del receptor
+    data = s.recv(1024)
+
+print(f"Received {data!r}")

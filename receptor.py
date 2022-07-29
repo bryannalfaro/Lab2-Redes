@@ -1,16 +1,22 @@
-import pickle
 import socket
+from bitarray import bitarray
+import pickle
 
-class Receptor:
-    def __init__(self, host, port):
-        self.host = host
-        self.port = port
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.connect((host, port))
+HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
+PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
-    def recibir_cadena(self):
-        return pickle.loads(self.socket.recv(1024))
-
-    def cerrar(self):
-        self.socket.close()
-
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s.bind((HOST, PORT))
+    s.listen()
+    conn, addr = s.accept()
+    with conn:
+        print(f"Connected by {addr}")
+        while True:
+            data = conn.recv(1024)
+            message = pickle.loads(data)
+            print(message)
+            a = message.tobytes().decode('ascii')
+            print(a)
+            if not data:
+                break
+            conn.sendall(data)
