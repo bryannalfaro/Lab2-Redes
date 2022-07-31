@@ -1,3 +1,4 @@
+from cmath import log
 from copyreg import pickle
 import socket
 import pickle
@@ -13,10 +14,19 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     # Enviar cadena
     message = input('Escribe el mensaje:\n')
 
+    detection = input('Que Algoritmo de detección desea usar:\n1-Paridad \n2-Cheksum\n')
+
     # Enviar cadena segura
     bits = bitarray()
     bits.frombytes(bytes(message, 'ascii'))
     print(bits)
+
+
+    if detection == "1":
+        if (bits.count(1) % 2) == 0:
+            parity = 0
+        else:
+            parity = 1
 
     # RUIDOOOOOOOOO
     for index, bit in enumerate(bits):
@@ -25,6 +35,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if error:
             print(f'da error en pos {index}')
             bits[index] = 1 if bits[index] == 0 else 0
+
+    if detection == "1":
+        bits.append(parity)
 
     print(bits)
 

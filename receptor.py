@@ -14,9 +14,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         while True:
             data = conn.recv(1024)
             message = pickle.loads(data)
-            print(message)
+            detection = input('Que Algoritmo de detección desea usar:\n1-Paridad \n2-Cheksum\n')
+            if detection == "1":
+                if (message.count(1) % 2) == 1:
+                    print("Hay un error en el mensaje")
+                    break
             a = message.tobytes().decode('ascii')
-            print(a)
             if not data:
                 break
             conn.sendall(data)
+            break
