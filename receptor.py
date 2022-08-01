@@ -42,15 +42,15 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     print("The position of error is ",len(message)-correction,"from the left")
                     print(message)
                     message = list(message)
-                    print(message)
+                    #print(message)
                     message[len(message)-correction] = 1 if message[len(message)-correction]==0 else 0
-                    print(message)
+                    #print(message)
                     for index in range(len(message)):
                         message[index] = str(message[index])
                     message = ''.join(message)
-                    print('debe ser str', message)
+                    #print('debe ser str', message)
                     message = hamming.decalcParityBits(message, hamming.redundant_bit())
-                    print(hamming.remove_redundant_bits(message, hamming.redundant_bit()))
+                    #print(hamming.remove_redundant_bits(message, hamming.redundant_bit()))
                     # bits string to text
                     n = int(hamming.remove_redundant_bits(message, hamming.redundant_bit()), 2)
                     a = binascii.unhexlify('%x' % n)
