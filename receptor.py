@@ -21,12 +21,26 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             if detection == "1":
                 if (message.count(1) % 2) == 1:
                     print("Hay un error en el mensaje")
+                    with open ('./txt_paridad_recep.txt', "w+") as f:
+                        f.write('1')
+                        f.close
                     break
+                with open ('./txt_paridad_recep.txt', "w+") as f:
+                    f.write('0')
+                    f.close
                 a = message.tobytes().decode('ascii')
             elif detection == "2":
                 checksum = Fletcher16(message)
                 message = checksum.get_data_bits()
-                print(message)
+                if message == None:
+                    print("Hay un error en el mensaje")
+                    with open ('./txt_fletcher_recep.txt', "w+") as f:
+                        f.write('1')
+                        f.close
+                    break
+                with open ('./txt_fletcher_recep.txt', "w+") as f:
+                    f.write('0')
+                    f.close
                 a = message.tobytes().decode('ascii')
             elif detection == "3":
                 print(message)
@@ -34,11 +48,18 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 correction = hamming.detect_error(message, hamming.redundant_bit())
                 if(correction==0):
                     print("There is no error in the received message.")
+                    with open ('./txt_hamming_recep.txt', "w+") as f:
+                        f.write('0')
+                        f.close
                     message = hamming.decalcParityBits(message, hamming.redundant_bit())
                     print(hamming.remove_redundant_bits(message, hamming.redundant_bit()))
                     n = int(hamming.remove_redundant_bits(message, hamming.redundant_bit()), 2)
                     a = binascii.unhexlify('%x' % n)
                 else:
+                    print("Hay un error en el mensaje")
+                    with open ('./txt_hamming_recep.txt', "w+") as f:
+                        f.write('1')
+                        f.close
                     print("The position of error is ",len(message)-correction,"from the left")
                     print(message)
                     message = list(message)

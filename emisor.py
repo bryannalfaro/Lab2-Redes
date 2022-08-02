@@ -54,14 +54,40 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     # RUIDOOOOOOOOO
     cont = 0
     for index, bit in enumerate(bits):
-        if cont == 1:
-            break
         P = 0.2
         error = random.random() < P # P en el rango [0, 1)
         if error:
             print(f'da error en pos {index}')
             bits[index] = 1 if bits[index] == 0 else 0
             cont += 1
+
+    if cont > 0:
+        if detection == "1":
+            with open ('./txt_paridad.txt', "a") as f:
+                f.write('1')
+                f.close
+        elif detection == "2":
+            with open ('./fletcher.py.txt', "a") as f:
+                f.write('1')
+                f.close
+        elif detection == "3":
+            with open ('./txt_hamming.txt.txt', "a") as f:
+                f.write('1')
+                f.close
+    else: 
+        if detection == "1":
+            with open ('./txt_paridad.txt', "a") as f:
+                f.write('0')
+                f.close
+        elif detection == "2":
+            with open ('./fletcher.py.txt', "a") as f:
+                f.write('0')
+                f.close
+        elif detection == "3":
+            with open ('./txt_hamming.txt.txt', "a") as f:
+                f.write('0')
+                f.close
+
 
     if detection == "1":
         bits.append(parity)

@@ -98,4 +98,65 @@ plt.bar(probabilidad,errores)
 plt.xlabel('Probabilidad de errores')
 plt.ylabel('Cantidad de errores')
 plt.show()
-        #print(bits)
+
+algorithms = ["Paridad Simple", "Fletcher", "Hamming"]
+percents = []
+ 
+error_detected = 0
+errors_detected_recep = 0
+
+with open("./txt_paridad.txt") as f:
+    for line in f.readline():
+        if line == "1":
+            error_detected += 1
+
+with open("./txt_paridad_recep.txt") as f:
+    for line in f.readline():
+        if line == "1":
+            errors_detected_recep += 1
+
+error_p = (errors_detected_recep / error_detected) * 100
+percents.append(error_p)
+
+print("porcentaje de errores que detecto el algoritmo de Paridad Simple:")
+print(error_p, "%")
+error_detected = 0
+errors_detected_recep = 0
+
+with open("./txt_fletcher.txt") as f:
+    for line in f.readline():
+        if line == "1":
+            error_detected += 1
+
+with open("./txt_fletcher_recep.txt") as f:
+    for line in f.readline():
+        if line == "1":
+            errors_detected_recep += 1
+
+error_p = (errors_detected_recep / error_detected) * 100
+percents.append(error_p)
+
+print("porcentaje de errores que detecto el algoritmo de Paridad Simple:")
+print(error_p, "%")
+error_detected = 0
+errors_detected_recep = 0
+
+with open("./txt_hamming.txt") as f:
+    for line in f.readline():
+        if line == "1":
+            error_detected += 1
+
+with open("./txt_hamming_recep.txt") as f:
+    for line in f.readline():
+        if line == "1":
+            errors_detected_recep += 1
+
+error_p = (errors_detected_recep / error_detected) * 100
+percents.append(error_p)
+print("porcentaje de errores que detecto el algoritmo de Paridad Simple:")
+print(error_p, "%")
+
+plt.bar(algorithms, percents)
+plt.ylabel('Porcentaje de aciertos')
+plt.xlabel('Algoritmos')
+plt.show()
