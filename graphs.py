@@ -1,14 +1,11 @@
-from cmath import log
-from copyreg import pickle
-import socket
-import pickle
+# Universidad del Valle de Guatemala
+# Redes - CC3067
+# Laboratorio 2
+# Bryann 19372, Diego 19422, Julio 19402
+
 import random
 from bitarray import bitarray
-from fletcher import Fletcher16
-from hamming import Hamming
-import binascii
 import matplotlib.pyplot as plt
-import pandas as pd
 
 errores = []
 palabras = []
@@ -29,29 +26,17 @@ json_probability = {
     5: 0.7
 }
 
-def int2bytes(i):
-    hex_string = '%x' % i
-    n = len(hex_string)
-    return binascii.unhexlify(hex_string.zfill(n + (n & 1)))
-
-    # Enviar cadena
-    #message = input('Escribe el mensaje:\n')
-
-    #detection = input('Que Algoritmo de detección desea usar:\n1-Paridad\n2-Cheksum\n3-Hamming\n')
-
-    # Enviar cadena segura
-
+# Grafica cantidad de errores por longitud de palabra
 for i in json:
     message = json[i]
     bits = bitarray()
     bits.frombytes(bytes(message, 'ascii'))
-    #print(bits)
-    #print(bits)
     # RUIDOOOOOOOOO
     palabras.append(str(len(bits)))
     cont = 0
     for index, bit in enumerate(bits):
-        '''if cont == 1:
+        '''# forzar a un solo bit de error
+        if cont == 1:
             break'''
         P = 0.2
         error = random.random() < P # P en el rango [0, 1)
@@ -61,26 +46,28 @@ for i in json:
             cont += 1
     errores.append(cont)
 
-    print("Hubieron", cont, "errores")
-    print(errores)
-    print(palabras)
+    print("Hubieron", cont, "errores en la oracion ", i, "con ", palabras[i-1], " palabras")
+    #print(errores)
+    #print(palabras)
 
 plt.bar(palabras,errores)
 plt.xlabel('Longitud en bits de palabra')
 plt.ylabel('Cantidad de errores')
 plt.show()
+print()
+
+# Grafica cantidad de errores por probabilidad de error en cada bit
 errores.clear()
 for i in json_probability:
     message = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
     bits = bitarray()
     bits.frombytes(bytes(message, 'ascii'))
-    #print(bits)
-    #print(bits)
     # RUIDOOOOOOOOO
     probabilidad.append(str(json_probability[i]))
     cont = 0
     for index, bit in enumerate(bits):
-        '''if cont == 1:
+        '''# forzar a un solo bit de error
+        if cont == 1:
             break'''
         P = json_probability[i]
         error = random.random() < P # P en el rango [0, 1)
@@ -90,18 +77,20 @@ for i in json_probability:
             cont += 1
     errores.append(cont)
 
-    print("Hubieron", cont, "errores")
-    print(errores)
-    print(probabilidad)
+    print("Hubieron", cont, "errores para la probabilidad ", probabilidad[i-1])
+    #print(errores)
+    #print(probabilidad)
 
 plt.bar(probabilidad,errores)
 plt.xlabel('Probabilidad de errores')
 plt.ylabel('Cantidad de errores')
 plt.show()
+print()
 
+# Grafica de Porcentaje de exito entre emisor y receptor segun cantidad de mensajes correctos/con error
 algorithms = ["Paridad Simple", "Fletcher", "Hamming"]
 percents = []
- 
+
 error_detected = 0
 errors_detected_recep = 0
 
@@ -136,7 +125,7 @@ with open("./txt_fletcher_recep.txt") as f:
 error_p = (errors_detected_recep / error_detected) * 100
 percents.append(error_p)
 
-print("porcentaje de errores que detecto el algoritmo de Paridad Simple:")
+print("porcentaje de errores que detecto el algoritmo de Fletcher:")
 print(error_p, "%")
 error_detected = 0
 errors_detected_recep = 0
@@ -153,7 +142,7 @@ with open("./txt_hamming_recep.txt") as f:
 
 error_p = (errors_detected_recep / error_detected) * 100
 percents.append(error_p)
-print("porcentaje de errores que detecto el algoritmo de Paridad Simple:")
+print("porcentaje de errores que detecto el algoritmo de Hamming:")
 print(error_p, "%")
 
 plt.bar(algorithms, percents)

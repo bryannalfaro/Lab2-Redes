@@ -19,7 +19,7 @@ class Fletcher16(object):
     def get_checksum_bits(self):
         checksum = self.get_checksum()
         checksum_bits = []
-        for i in range(16):
+        for _ in range(16):
             checksum_bits.append(checksum % 2)
             checksum = checksum // 2
         return checksum_bits[::-1]
