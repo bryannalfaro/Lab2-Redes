@@ -64,6 +64,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             print(f'da error en pos {index}')
             bits[index] = 1 if bits[index] == 0 else 0
             error_cont += 1
+    # validacion para evitar error en Hamming
+    if detection == "3" and error_cont > 1:
+        print('Hamming no puede resolver mas de un bit error\n')
+        exit()
 
     # Escribir resultados en archivo para metricas
     if error_cont > 0:
@@ -74,7 +78,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             filename = "./txt_fletcher.txt"
         elif detection == "3":
             filename = "./txt_hamming.txt"
-    else: 
+    else:
         value = "0"
         if detection == "1":
             filename = "./txt_paridad.txt"
@@ -87,10 +91,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         f.write(value)
         f.close
 
-    # validacion para evitar error en Hamming
-    if detection == "3" and error_cont > 1:
-        print('Hamming no puede resolver mas de un bit error\n')
-        exit()
+
 
     print(f'bits a enviar:\n{bits}')
 
