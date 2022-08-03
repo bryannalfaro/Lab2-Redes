@@ -33,6 +33,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     print("Hay un error en el mensaje")
                     value = "1"
                 else:
+                    message.pop()
                     result = message.tobytes().decode('ascii')
                     value = "0"
                 with open (filename, "a") as f:
