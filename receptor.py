@@ -24,18 +24,18 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             data = conn.recv(1024)
             message = pickle.loads(data)
             detection = input('Que Algoritmo de detección está recibiendo?:\n1-Paridad \n2-Cheksum\n3-Hamming\n')
+            result = ""
 
             # Paridad
             if detection == "1":
+                filename = "./txt_paridad_recep.txt"
                 if (message.count(1) % 2) == 1:
                     print("Hay un error en el mensaje")
-                    filename = "./txt_paridad_recep.txt"
                     value = "1"
                 else:
                     result = message.tobytes().decode('ascii')
-                    filename = "./txt_paridad_recep.txt"
                     value = "0"
-                with open (filename, "w+") as f:
+                with open (filename, "a") as f:
                     f.write(value)
                     f.close
 
@@ -43,15 +43,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             elif detection == "2":
                 checksum = Fletcher16(message)
                 message = checksum.get_data_bits()
+                filename = "./txt_fletcher_recep.txt"
                 if message == None:
                     print("Hay un error en el mensaje")
-                    filename = "./txt_fletcher_recep.txt"
                     value = "1"
                 else:
                     result = message.tobytes().decode('ascii')
-                    filename = "./txt_fletcher_recep.txt"
                     value = "0"
-                with open (filename, "w+") as f:
+                with open (filename, "a") as f:
                     f.write(value)
                     f.close
 
@@ -59,11 +58,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             elif detection == "3":
                 hamming = Hamming(message)
                 correction = hamming.detect_error(message, hamming.redundant_bit())
+                filename = "./txt_hamming_recep.txt"
                 if correction == 0:
                     message = hamming.decalcParityBits(message, hamming.redundant_bit())
                     bits_message = int(hamming.remove_redundant_bits(message, hamming.redundant_bit()), 2)
                     result = binascii.unhexlify('%x' % bits_message)
-                    filename = "./txt_hamming_recep.txt"
                     value = "0"
                 else:
                     print("Hay un error en el mensaje")
@@ -79,13 +78,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     # bits string to text
                     n = int(hamming.remove_redundant_bits(message, hamming.redundant_bit()), 2)
                     result = binascii.unhexlify('%x' % n)
-                    filename = "./txt_hamming_recep.txt"
                     value = "1"
-                with open (filename, "w+") as f:
+                with open (filename, "a") as f:
                     f.write(value)
                     f.close
-            print(result)
             if not data:
                 break
-            conn.sendall(pickle.dumps(result))
+            if result:
+                print(result)
+                conn.sendall(pickle.dumps(result))
             break

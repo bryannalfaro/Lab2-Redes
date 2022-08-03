@@ -71,17 +71,17 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if detection == "1":
             filename = "./txt_paridad.txt"
         elif detection == "2":
-            filename = "./fletcher.py.txt"
+            filename = "./txt_fletcher.txt"
         elif detection == "3":
-            filename = "./txt_hamming.txt.txt"
+            filename = "./txt_hamming.txt"
     else: 
         value = "0"
         if detection == "1":
             filename = "./txt_paridad.txt"
         elif detection == "2":
-            filename = "./fletcher.py.txt"
+            filename = "./txt_fletcher.txt"
         elif detection == "3":
-            filename = "./txt_hamming.txt.txt"
+            filename = "./txt_hamming.txt"
 
     with open (filename, "a") as f:
         f.write(value)
